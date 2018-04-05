@@ -27,6 +27,7 @@
     "nodemon": "^1.17.3"
   },
   "dependencies": {
-    "dotenv": "^5.0.1"
+    "dotenv": "^5.0.1",
+    "google-images": "^2.1.0"
   }
 }

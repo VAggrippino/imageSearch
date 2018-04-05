@@ -1,0 +1,19 @@
+{
+  "name": "imagesearch",
+  "version": "1.0.0",
+  "description": "Image Search Abstraction Layer - freeCodeCamp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VAggrippino/imageSearch.git"
+  },
+  "author": "Vince Aggrippino",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/VAggrippino/imageSearch/issues"
+  },
+  "homepage": "https://github.com/VAggrippino/imageSearch#readme"
+}

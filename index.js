@@ -12,6 +12,11 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
+app.get('/api/imagesearch/:query', (req, res) => {
+  console.log(`Search Query: ${req.params.query}`)
+  res.end('JSON response here')
+})
+
 app.listen(port, () => {
   console.log(`Listening on port ${port} ...`)
 })

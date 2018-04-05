@@ -1,12 +1,12 @@
 require('dotenv').config()
-let express = require('express')
-let MongoClient = require('mongodb').MongoClient
+const express = require('express')
+const MongoClient = require('mongodb').MongoClient
 
-let port = process.env.PORT || 3000
+const port = process.env.PORT || 3000
 
-let app = express()
+const app = express()
 app.set('view engine', 'pug')
-app.use(express.static('public'))
+app.use(express.static('public')) // For static CSS / JavaScript files
 
 app.get('/', (req, res) => {
   res.render('index')

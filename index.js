@@ -1,8 +1,10 @@
 require('dotenv').config()
 const express = require('express')
 const MongoClient = require('mongodb').MongoClient
+const GoogleImages = require('google-images')
 
 const port = process.env.PORT || 3000
+const gimg = new GoogleImages(process.env.CSE_ID, process.env.API_KEY)
 
 const app = express()
 app.set('view engine', 'pug')

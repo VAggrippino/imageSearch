@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "dotenv": "^5.0.1",
-    "google-images": "^2.1.0"
+    "express": "^4.16.3",
+    "google-images": "^2.1.0",
+    "mongodb": "^3.0.5"
   }
 }

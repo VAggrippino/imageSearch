@@ -78,6 +78,14 @@ app.get('/api/imagesearch/:query', (req, res) => {
   cseRequest.end()
 })
 
+app.get('/api/latest/imagesearch', (req, res) => {
+  getSearches(database)
+    .then(result => {
+      console.log(result)
+      res.end(JSON.stringify(result))
+    })
+})
+
 app.listen(port, () => {
   console.log(`Listening on port ${port} ...`)
 })
@@ -103,7 +111,7 @@ async function insertSearch (database, query) {
   let lastInserted = await collection.findOne({}, {sort: {_id: -1}})
   if (lastInserted === null || lastInserted.query !== query) {
     console.log(`Inserting record for new search: ${query}`)
-    collection.insertOne({query})
+    collection.insertOne({term: query})
   } else {
     console.log(`Not inserting record for repeated search: ${query}`)
   }
@@ -114,6 +122,12 @@ async function getSearches (database) {
   let db = client.db(database.name)
   let collection = db.collection(database.collection)
 
-  let results = await collection.find({}, {projection: {_id: 0}})
+  let results = await collection.find({}).limit(10).toArray()
+  results.map(result => {
+    let timestamp = result._id.toString().substring(0, 8)
+    let date = new Date(parseInt(timestamp, 16) * 1000)
+    result.when = date.toISOString()
+    delete result._id
+  })
   return results
 }

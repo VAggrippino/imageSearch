@@ -42,6 +42,14 @@ html(lang='en')
             aria-selected='true'
           ) Usage
         li.nav-item
+          a#history-tab.nav-link(
+            href="#history"
+            data-toggle='tab'
+            role='tab'
+            aria-controls='history'
+            aria-selected='true'
+          ) History
+        li.nav-item
           a#about-tab.nav-link(
             href='#about'
             data-toggle='tab'
@@ -79,6 +87,12 @@ html(lang='en')
             br
             code [{"term":"lolcats funny","when":"2018-04-06T02:58:53.000Z"},
             | ...
+
+        #history.tab-pane.fade.p-2(role='tabpanel')
+          h2 Last 10 Searches:
+          ol
+            each search in history
+              li #[a(href='/api/imagesearch/' + search.term) #{search.term}]
 
         #about.tab-pane.fade.p-2(role='tabpanel')
           .description

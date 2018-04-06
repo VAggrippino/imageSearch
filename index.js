@@ -26,7 +26,13 @@ app.set('view engine', 'pug')
 app.use(express.static('public')) // For static CSS / JavaScript files
 
 app.get('/', (req, res) => {
-  res.render('index', {domain: req.headers.host})
+  getSearches(database)
+    .then(result => {
+      res.render('index', {
+        domain: req.headers.host,
+        history: result
+      })
+    })
 })
 
 app.get('/api/imagesearch/:query', (req, res) => {

@@ -2,6 +2,137 @@ doctype html
 html(lang='en')
   head
     title Image Search Abstraction Layer | freeCodeCamp
+    link(
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    )
+    meta(charset="utf-8")
+    meta(
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    )
+    link(rel='stylesheet' href='style.css')
 
   body
-    h1 Image Search
+    .container
+      h1#title.text-center
+        span I
+        span m
+        span a
+        span g
+        span e
+        span s
+
+      form.align-self-center(action='new' method='post')
+        .form-row
+          .form-group.col-11
+            input.form-control(type='text' name='url')
+          .form-group.col-1
+            button.btn.btn-primary(type='submit') Search
+
+      ul#infoTabs.nav.nav-tabs(role='tablist')
+        li.nav-item
+          a#usage-tab.nav-link.active(
+            href="#usage"
+            data-toggle='tab'
+            role='tab'
+            aria-controls='usage'
+            aria-selected='true'
+          ) Usage
+        li.nav-item
+          a#about-tab.nav-link(
+            href='#about'
+            data-toggle='tab'
+            role='tab'
+            aria-controls='about'
+            aria-selected='false'
+          ) About
+
+      .tab-content
+        #usage.tab-pane.fade.p-2.show.active(role='tabpanel')
+          h2 Usage Information
+
+          h3 Examples:
+          p.
+            Enter a term into the form or use the following URL format.
+
+          p
+            code https://#{domain}/api/imagesearch/lolcats%20funny?offset=10
+            br
+            ul
+              li spaces will automatically be converted to #[code %20]
+              li the #[code offset] value is optional and, if used, the results
+                | returned will start at the number specified
+
+          h3 Example output
+          p 
+            code [{"url":"https://i.ytimg.com/vi/tRzXptpC3_U/hqdefault.jpg","snippet":"funny lolcats and loldogs - YouTube","thumbnail":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_dKvb6pMA0bod00g0v1Bk3YakSY7H4HYwpu268AqUK8pPiSdlUh9pEnYh","context":"https://www.youtube.com/watch?v=tRzXptpC3_U"},
+            | ...
+
+          h3 History:
+          p
+            code https://#{domain}/api/latest/imagesearch
+            br
+            | Will return the last 10 searches:
+            br
+            code [{"term":"lolcats funny","when":"2018-04-06T02:58:53.000Z"},
+            | ...
+
+        #about.tab-pane.fade.p-2(role='tabpanel')
+          .description
+            h2
+              a(href="https://www.freecodecamp.org/challenges/image-search-abstraction-layer")
+                | Image Search Abstraction Layer | freeCodeCamp
+            h3 Objective
+            p.
+              Build a full stack JavaScript app that allows you to search for
+              images like this:
+              #[a(href='https://cryptic-ridge-9197.herokuapp.com/api/imagesearch/lolcats%20funny?offset=10')]
+              and browse recent search queries like this:
+              #[a(href='https://cryptic-ridge-9197.herokuapp.com/api/latest/imagesearch/')].
+              Then deploy it to Glitch.
+
+            h3 User Story
+            p.
+              I can get the image URLs, alt text and page urls for a set of
+              images relating to a given search string.
+
+            h3 User Story
+            p.
+              I can paginate through the responses by adding a ?offset=2
+              parameter to the URL.
+
+            h3 User Story
+            p.
+              I can get a list of the most recently submitted search strings.
+
+            h3 Additional Feature
+            p.
+              I can perform a search using the form instead of using the
+              #[code /api/imagesearch] request.
+
+            h3 Additional Feature
+            p.
+              I can view a list of the most recently submitted search strings in
+              the History tab.
+
+    script(
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    )
+    script(
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    )
+    script(
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    )
+    script(src='script.js')
+          
+        

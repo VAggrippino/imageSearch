@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const https = require('https')
+const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient
 
 // App will listen on this port number
@@ -13,7 +14,7 @@ const database = {
   name: process.env.DB_NAME,
   collection: process.env.DB_COLLECTION,
   user: process.env.DB_USER,
-  pass: process.env.DB_PASS,
+  pass: process.env.DB_PASS
 }
 database['url'] = `mongodb://${database.host}:${database.port}/${database.name}`
 
@@ -23,6 +24,7 @@ createCollection(database)
 // Set up the express app
 const app = express()
 app.set('view engine', 'pug')
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.static('public')) // For static CSS / JavaScript files
 
 app.get('/', (req, res) => {
@@ -35,54 +37,8 @@ app.get('/', (req, res) => {
     })
 })
 
-app.get('/api/imagesearch/:query', (req, res) => {
-  let query = req.params.query
-
-  insertSearch(database, query)
-
-  let cseParams = '' +
-    `?q=${query}` +
-    `&cx=${process.env.CSE_ID}` +
-    `&key=${process.env.API_KEY}` +
-    '&num=10' +
-    '&safe=high' +
-    '&searchType=image' +
-    `&start=${req.query.offset || 1}`
-
-  let options = {
-    hostname: 'www.googleapis.com',
-    path: '/customsearch/v1' + encodeURI(cseParams)
-  }
-
-  console.log(`Search Query: ${query}`)
-  let cseRequest = https.request(options, cseResponse => {
-    let jsonString = ''
-    let searchResults = []
-    cseResponse.on('data', data => {
-      jsonString += data
-    })
-    cseResponse.on('end', () => {
-      let cseResult = JSON.parse(jsonString)
-      let items = cseResult.items
-      items.map(item => {
-        let resultItem = {
-          url: item.link,
-          snippet: item.title,
-          thumbnail: item.image.thumbnailLink,
-          context: item.image.contextLink
-        }
-        searchResults.push(resultItem)
-      })
-      res.end(JSON.stringify(searchResults))
-    })
-  })
-
-  cseRequest.on('error', e => {
-    console.log(e)
-  })
-
-  cseRequest.end()
-})
+app.get('/api/imagesearch/:query', newQuery)
+app.post('/api/imagesearch', newQuery)
 
 app.get('/api/latest/imagesearch', (req, res) => {
   getSearches(database)
@@ -136,4 +92,71 @@ async function getSearches (database) {
     delete result._id
   })
   return results
+}
+
+function newQuery (req, res) {
+  let query = req.body.query || req.params.query
+  console.log(`Search Query: ${query}`)
+
+  insertSearch(database, query)
+
+  cseSearch(req)
+    .then(searchResults => {
+      let jsonString = JSON.stringify(searchResults)
+
+      res.status(200)
+      res.set('Content-Type', 'application/json')
+
+      res.end(jsonString)
+    })
+}
+
+function cseSearch (req) {
+  let cseParams = '' +
+    `?q=${req.body.query || req.params.query}` +
+    `&cx=${process.env.CSE_ID}` +
+    `&key=${process.env.API_KEY}` +
+    '&num=10' +
+    '&safe=high' +
+    '&searchType=image' +
+    `&start=${req.query.offset || 1}`
+
+  let options = {
+    hostname: 'www.googleapis.com',
+    path: '/customsearch/v1' + encodeURI(cseParams)
+  }
+
+  return new Promise((resolve, reject) => {
+    let cseRequest = https.request(options, cseResponse => {
+      let jsonString = ''
+      let searchResults = []
+
+      cseResponse.on('data', data => {
+        jsonString += data
+      })
+
+      cseResponse.on('end', () => {
+        let cseResult = JSON.parse(jsonString)
+        cseResult.items.map(item => {
+          let resultItem = {
+            url: item.link,
+            snippet: item.title,
+            thumbnail: item.image.thumbnailLink,
+            context: item.image.contextLink
+          }
+          searchResults.push(resultItem)
+        })
+
+        resolve(searchResults)
+      })
+    })
+
+    cseRequest.on('error', e => {
+      console.log('CSE Error:')
+      console.log(e)
+      reject(e)
+    })
+
+    cseRequest.end()
+  })
 }

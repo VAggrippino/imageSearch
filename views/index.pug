@@ -25,10 +25,10 @@ html(lang='en')
         span e
         span s
 
-      form.align-self-center(action='new' method='post')
+      form.align-self-center(action='api/imagesearch' method='post')
         .form-row
           .form-group.col-11
-            input.form-control(type='text' name='url')
+            input.form-control(type='text' name='query')
           .form-group.col-1
             button.btn.btn-primary(type='submit') Search
 

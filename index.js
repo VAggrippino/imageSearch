@@ -84,7 +84,7 @@ async function getSearches (database) {
   let db = client.db(database.name)
   let collection = db.collection(database.collection)
 
-  let results = await collection.find({}).limit(10).toArray()
+  let results = await collection.find({}).sort({_id: -1}).limit(10).toArray()
   results.map(result => {
     let timestamp = result._id.toString().substring(0, 8)
     let date = new Date(parseInt(timestamp, 16) * 1000)

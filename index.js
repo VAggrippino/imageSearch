@@ -13,10 +13,10 @@ const database = {
   port: process.env.DB_PORT,
   name: process.env.DB_NAME,
   collection: process.env.DB_COLLECTION,
-  user: process.env.DB_USER,
-  pass: process.env.DB_PASS
+  user: encodeURIComponent(process.env.DB_USER),
+  pass: encodeURIComponent(process.env.DB_PASS)
 }
-database['url'] = `mongodb://${database.host}:${database.port}/${database.name}`
+database['url'] = `mongodb://${database.user}:${database.pass}@${database.host}:${database.port}/${database.name}`
 
 // Create a collection to store the searches
 createCollection(database)
